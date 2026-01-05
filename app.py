@@ -148,10 +148,10 @@ LAGOS_AREAS = {
 
 def generate_business_id(business_name, business_type, location):
     """Generate unique 8-character business ID"""
-    combined = f"KM-{business_name}{business_type}{location}{secrets.token_hex(4)}".lower()
+    combined = f"{business_name}{business_type}{location}{secrets.token_hex(4)}".lower()
     hash_obj = hashlib.sha256(combined.encode())
     business_id = hash_obj.hexdigest()[:8].upper()
-    return business_id
+    return f"KM-{business_id}"
 
 
 def save_user(business_id, business_name, business_type, location):
