@@ -150,8 +150,8 @@ def generate_business_id(business_name, business_type, location):
     """Generate unique 8-character business ID"""
     combined = f"{business_name}{business_type}{location}{secrets.token_hex(4)}".lower()
     hash_obj = hashlib.sha256(combined.encode())
-    business_id = hash_obj.hexdigest()[:8].upper()
-    return f"KM-{business_id}"
+    business_id = f"KM-{hash_obj.hexdigest()[:8].upper()}"
+    return business_id
 
 
 def save_user(business_id, business_name, business_type, location):
@@ -362,8 +362,8 @@ def login_page():
 
     business_id = st.text_input(
         "Business ID",
-        placeholder="e.g., A1B2C3D4",
-        max_chars=8
+        placeholder="e.g., KM-A1B2C3D4",
+        max_chars=12
     ).upper()
 
     col1, col2, col3 = st.columns([1, 2, 1])
