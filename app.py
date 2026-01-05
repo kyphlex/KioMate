@@ -369,8 +369,8 @@ def login_page():
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("🔓 Access Dashboard", use_container_width=True):
-            if len(business_id) != 12:
-                st.error("Business ID must be 12 characters")
+            if len(business_id) != 11:
+                st.error("Business ID must be 11 characters")
             else:
                 user_data = get_user(business_id)
                 if user_data:
