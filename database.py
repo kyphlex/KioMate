@@ -140,7 +140,11 @@ def get_user_insights(business_id, limit=10):
         insights_list = []
         for row in rows:
             insight = dict(row)
-            insight['quick_wins'] = json.loads(insight['quick_wins'])
+            # Parse quick_wins JSON string back to list
+            try:
+                insight['quick_wins'] = json.loads(insight['quick_wins'])
+            except:
+                insight['quick_wins'] = []
             insights_list.append(insight)
 
         return insights_list

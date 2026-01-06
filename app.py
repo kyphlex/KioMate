@@ -5,6 +5,17 @@ from datetime import datetime
 import json
 import hashlib
 import secrets
+from database import (
+    init_database,
+    save_user as db_save_user,
+    get_user as db_get_user,
+    save_insight,
+    get_user_insights,
+    get_user_stats
+)
+
+
+init_database()
 
 # Configure page
 st.set_page_config(
@@ -18,7 +29,10 @@ st.markdown("""
     <style>
     /* Main background - teal */
     .main {
-        background: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+        background: teal;
+    }
+    .stApp {
+        background-color: #071C1A;
     }
 
     /* Buttons - orange */
@@ -155,27 +169,12 @@ def generate_business_id(business_name, business_type, location):
 
 
 def save_user(business_id, business_name, business_type, location):
-    """Save user data"""
-    user_data = {
-        'business_id': business_id,
-        'business_name': business_name,
-        'business_type': business_type,
-        'location': location,
-        'created_at': datetime.now().isoformat()
-    }
-
-    if 'users_db' not in st.session_state:
-        st.session_state.users_db = {}
-
-    st.session_state.users_db[business_id] = user_data
-    return user_data
-
+    """Save user data to database"""
+    return db_save_user(business_id, business_name, business_type, location)
 
 def get_user(business_id):
-    """Retrieve user data by business ID"""
-    if 'users_db' not in st.session_state:
-        st.session_state.users_db = {}
-    return st.session_state.users_db.get(business_id)
+    """Retrieve user data by business ID from database"""
+    return db_get_user(business_id)
 
 
 def generate_insights_with_search(business_type, location):
@@ -318,8 +317,8 @@ def signup_page():
             col1, col2 = st.columns(2)
             with col1:
                 business_type = st.text_input(
-                    "What do you sell?",
-                    placeholder="e.g., Shoes, Food, Phones"
+                    "What services do you render or sell?",
+                    placeholder="e.g., Food, Hairdressing, Fashion"
                 )
 
             with col2:
@@ -392,6 +391,12 @@ def dashboard_page():
     """Main dashboard after login"""
     user = st.session_state.user_data
 
+    try:
+        stats = get_user_stats(user['business_id'])
+        insights_count = stats['insights_count']
+    except:
+        insights_count = 0
+
     # Header with logout
     col1, col2 = st.columns([3, 1])
     with col1:
@@ -401,6 +406,9 @@ def dashboard_page():
         if st.button("🚪 Logout"):
             st.session_state.logged_in = False
             st.session_state.user_data = None
+            st.session_state.current_insights = None
+            st.session_state.chat_messages = []
+            st.session_state.chat_mode = False
             st.rerun()
 
     st.markdown("---")
@@ -412,7 +420,7 @@ def dashboard_page():
     with col2:
         st.metric("Location", user['location'])
     with col3:
-        st.metric("Insights Generated", len(st.session_state.insights_history))
+        st.metric("Insights Generated", insights_count)
 
     st.markdown("---")
 
@@ -428,8 +436,7 @@ def dashboard_page():
                 try:
                     insights = generate_insights_with_search(user['business_type'], user['location'])
 
-                    # Save to history and set as current
-                    st.session_state.insights_history.append(insights)
+                    save_insight(user['business_id'], insights)
                     st.session_state.current_insights = insights
                     st.session_state.chat_mode = False
                     st.session_state.chat_messages = []  # Reset chat
@@ -576,14 +583,20 @@ Powered by KioMate with Google Search
                 st.rerun()
 
     # Show previous insights if any
-    if st.session_state.insights_history:
-        st.markdown("---")
-        st.markdown("### 📊 Previous Insights")
-        with st.expander(f"View {len(st.session_state.insights_history)} previous insight(s)"):
-            for idx, past_insight in enumerate(reversed(st.session_state.insights_history), 1):
-                st.markdown(f"**Insight #{idx}** - Generated {past_insight.get('generated_at', 'recently')}")
-                st.caption(f"✓ {past_insight.get('customer_profile', '')[:100]}...")
-
+    try:
+        previous_insights = get_user_insights(user['business_id'], limit=5)
+        if previous_insights and len(previous_insights) > 0:
+            st.markdown("---")
+            st.markdown("### 📊 Previous Insights")
+            with st.expander(f"View {len(previous_insights)} recent insight(s)"):
+                for idx, past_insight in enumerate(previous_insights, 1):
+                    generated_date = datetime.fromisoformat(past_insight['generated_at']).strftime(
+                        '%B %d, %Y at %I:%M %p')
+                    st.markdown(f"**Insight #{idx}** - Generated {generated_date}")
+                    st.caption(f"✓ {past_insight.get('customer_profile', '')[:150]}...")
+                    st.markdown("---")
+    except:
+        pass
 
 def main():
     """Main app logic"""
