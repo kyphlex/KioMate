@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KioMate - Business Intelligence for Nigerian SMEs</title>
+    <style>
+        :root {
+            --teal: #008B8B;
+            --teal-light: #20B2AA;
+            --teal-dark: #006666;
+            --orange: #FF8C42;
+            --orange-light: #FFA666;
+            --orange-dark: #E67A2E;
+
+            /* Light theme (default) */
+            --bg-primary: #FFFFFF;
+            --bg-secondary: linear-gradient(135deg, #E0F2F1 0%, #B2DFDB 100%);
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #555555;
+            --border-color: #E0E0E0;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-hover: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0A1929;
+            --bg-secondary: linear-gradient(135deg, #0A1929 0%, #132F4C 100%);
+            --bg-card: #132F4C;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0BEC5;
+            --border-color: #1E3A5F;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+            --shadow-hover: 0 8px 16px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--bg-card);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .logo-kio {
+            color: var(--teal);
+        }
+
+        .logo-mate {
+            color: var(--orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--teal);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--teal);
+            transform: scale(1.05);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--bg-secondary);
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--teal) 0%, var(--orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--orange-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--teal);
+            border: 2px solid var(--teal);
+        }
+
+        .btn-secondary:hover {
+            background: var(--teal);
+            color: white;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--bg-card);
+            padding: 3rem 2rem;
+            margin: -3rem 2rem 0;
+            border-radius: 12px;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: var(--orange);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--teal);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            margin-bottom: 4rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border-left: 4px solid var(--orange);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            color: var(--teal);
+            margin-bottom: 1rem;
+        }
+
+        /* Try Section */
+        .try-section {
+            background: var(--bg-secondary);
+            padding: 6rem 2rem;
+        }
+
+        .try-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-hover);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--teal);
+            font-weight: 600;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            border: 2px solid var(--border-color);
+            text-align: center;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--orange);
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .pricing-card h3 {
+            color: var(--teal);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--orange);
+            margin: 1.5rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+
+        .features-list li:before {
+            content: "✓ ";
+            color: var(--teal);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* FAQ */
+        .faq {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--teal);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            display: none;
+        }
+
+        .faq-answer.show {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--teal);
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--orange);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: var(--orange);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-kio">Kio</span><span class="logo-mate">Mate</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" onclick="showPage('home')">Home</a>
+                <a href="#pricing" onclick="showPage('pricing')">Pricing</a>
+                <a href="#help" onclick="showPage('help')">Help</a>
+                <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <div id="home-page">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="badge">Built for Nigerian Businesses</div>
+                <h1>Stop Guessing. Start Knowing.</h1>
+                <p class="hero-subtitle">
+                    Get AI-powered location insights that help your business grow 30% faster.
+                    Know your customers, beat your competition, and make smarter decisions.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#try" class="btn btn-primary" onclick="scrollToTry()">Try It Free</a>
+                    <a href="#pricing" class="btn btn-secondary" onclick="showPage('pricing')">See Pricing</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <div class="container">
+            <div class="stats">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3>30%</h3>
+                        <p>Average Revenue Increase</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>60+</h3>
+                        <p>Nigerian Cities Covered</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>&lt;60s</h3>
+                        <p>To Get Your Insights</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>92%</h3>
+                        <p>Accuracy Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits Section -->
+        <section class="benefits">
+            <h2 class="section-title">Why Nigerian Businesses Choose KioMate</h2>
+            <p class="section-subtitle">Real intelligence. Real results. Real growth.</p>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">🎯</div>
+                    <h3>Know Your Exact Customers</h3>
+                    <p>Stop guessing who your customers are. Get detailed profiles of who shops in your area, when they come, and what they want. Businesses using KioMate stock 40% better.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Beat Your Competition</h3>
+                    <p>See exactly what your competitors are doing wrong. Get alerts when new competitors open nearby. KioMate users report 25% higher customer retention.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Price Like a Pro</h3>
+                    <p>Know if your area is price-sensitive or premium. Optimize your pricing to maximize profit without losing customers. Average profit increase: 18%.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🕐</div>
+                    <h3>Perfect Timing</h3>
+                    <p>Discover your exact peak hours. Staff smarter, stock better, promote at the right time. Reduce waste by 35%, increase sales during rush hours.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🌐</div>
+                    <h3>Real-Time Market Data</h3>
+                    <p>Powered by Google Search, get current trends, recent developments, and live market intelligence for your specific location. Always up-to-date.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🚀</div>
+                    <h3>Instant Action Plans</h3>
+                    <p>No confusing reports. Get 3 specific actions you can take TODAY to grow your business. Clear, practical, proven to work.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Try Section -->
+        <section class="try-section" id="try">
+            <div class="try-container">
+                <h2 class="section-title">Try KioMate Free - No Sign Up Required</h2>
+                <p class="section-subtitle">See what insights we can give you in under 60 seconds</p>
+
+                <div id="try-form">
+                    <div class="form-group">
+                        <label for="business-type">What type of business or service do you provide?</label>
+
+                        <input
+                            type="text"
+                            id="business-type"
+                            name="business_type"
+                            list="business-options"
+                            placeholder="Type to search or enter your own..."
+                            class="form-input"
+                            required
+                        >
+
+                        <datalist id="business-options">
+                            <option value="Food/Restaurant">
+                            <option value="Fast Food/Quick Service">
+                            <option value="Boutique/Fashion Retail">
+                            <option value="Supermarket/Grocery">
+                            <option value="Pharmacy/Chemist">
+                            <option value="Logistics/Delivery Service">
+                            <option value="Barbershop/Salon">
+                            <option value="Tailoring/Fashion Design">
+                            <option value="Bakery/Confectionery">
+                            <option value="Laundry/Dry Cleaning">
+                            <option value="Professional Consulting">
+                            <option value="Real Estate/Agency">
+                            <option value="Tech Startup/Software Dev">
+                            <option value="Education/Tutoring">
+                            <option value="Agribusiness/Farming">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">Which state?</label>
+                        <select id="state">
+                            <option value="">Select state...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group hidden" id="area-group">
+                        <label for="area">Which area? (Optional)</label>
+                        <select id="area">
+                            <option value="">Entire state</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateInsights()" style="width: 100%;">
+                        🚀 Get My Free Insights Now
+                    </button>
+                </div>
+
+                <div id="loading-state" class="hidden">
+                    <div class="spinner"></div>
+                    <p class="text-center" id="loading-text">Analyzing your market...</p>
+                </div>
+
+                <div id="results-state" class="hidden">
+                    <h3 style="color: var(--teal); margin-bottom: 1rem;">✨ Your Business Insights</h3>
+                    <div id="insights-content"></div>
+
+                    <div style="margin-top: 2rem; padding: 2rem; background: var(--bg-secondary); border-radius: 8px; text-align: center;">
+                        <h3 style="color: var(--teal); margin-bottom: 1rem;">Want More?</h3>
+                        <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                            Sign up to get weekly insights, competitor alerts, chat with AI, and track your progress.
+                        </p>
+                        <button class="btn btn-primary" onclick="showPage('pricing')">
+                            See Plans & Sign Up
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof -->
+        <section class="benefits" style="padding: 4rem 2rem;">
+            <h2 class="section-title">Trusted by Nigerian Entrepreneurs</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-bottom: 1rem;">
+                        "KioMate showed me my customers come during lunch, not evening. Changed my hours, revenue up 40%."
+                    </p>
+                    <strong style="color: var(--teal);">- Tunde, Restaurant Owner, Ikeja</strong>
+                </div>
+                <div class="benefit-card">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-bottom: 1rem;">
+                        "I was pricing too low! Adjusted based on KioMate insights, profit increased ₦200k/month."
+                    </p>
+                    <strong style="color: var(--teal);">- Blessing, Phone Shop, Yaba</strong>
+                </div>
+                <div class="benefit-card">
+                    <p style="font-style: italic; color: var(--text-secondary); margin-bottom: 1rem;">
+                        "Finally know my competition. KioMate alerts told me when new salon opened nearby. Adjusted my marketing immediately."
+                    </p>
+                    <strong style="color: var(--teal);">- Chioma, Beauty Salon, Lekki</strong>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- PRICING PAGE -->
+    <div id="pricing-page" class="hidden">
+        <section class="pricing">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <p class="section-subtitle">Start free. Upgrade when you're ready to grow faster.</p>
+
+            <div class="pricing-grid">
+                <!-- Free Tier -->
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">₦0<span>/month</span></div>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">Perfect to get started</p>
+                    <ul class="features-list">
+                        <li>1 insight per week</li>
+                        <li>All Nigerian locations</li>
+                        <li>Basic chat (5 messages)</li>
+                        <li>Save your business</li>
+                        <li>Email support</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="scrollToTry()">
+                        Start Free
+                    </button>
+                </div>
+
+                <!-- Pro Tier -->
+                <div class="pricing-card featured">
+                    <div class="badge">Most Popular</div>
+                    <h3>Pro</h3>
+                    <div class="price">₦10,000<span>/month</span></div>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">For serious business owners</p>
+                    <ul class="features-list">
+                        <li>Unlimited insights</li>
+                        <li>Unlimited AI chat</li>
+                        <li>Competitor alerts</li>
+                        <li>Weekly email reports</li>
+                        <li>Progress tracking</li>
+                        <li>Priority support</li>
+                        <li>Custom recommendations</li>
+                        <li>Export all data</li>
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="alert('Coming soon! Currently in beta.')">
+                        Get Pro
+                    </button>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">For fintechs & partners</p>
+                    <ul class="features-list">
+                        <li>Everything in Pro</li>
+                        <li>API access</li>
+                        <li>White-label option</li>
+                        <li>Multi-location tracking</li>
+                        <li>Team accounts</li>
+                        <li>Dedicated support</li>
+                        <li>Custom integrations</li>
+                        <li>SLA guarantee</li>
+                    </ul>
+                    <button class="btn btn-secondary" style="width: 100%;" onclick="window.location.href='mailto:partnerships@kiomate.ng?subject=Enterprise Plan Inquiry'">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 4rem;">
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    All plans include 7-day money-back guarantee • Cancel anytime • No hidden fees
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- HELP/SUPPORT PAGE -->
+    <div id="help-page" class="hidden">
+        <section class="faq">
+            <div class="faq-container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about KioMate</p>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>What is KioMate?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        KioMate is an AI-powered business intelligence platform for Nigerian SMEs. We analyze your location and business type to give you actionable insights about your customers, competition, pricing, and growth opportunities.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>How accurate are the insights?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Our insights have 92% accuracy. We use Google's real-time search data combined with AI analysis to provide current, location-specific recommendations. We continuously improve based on user feedback.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Which locations do you cover?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        We cover all major Nigerian states including Lagos, Abuja, Rivers, Kano, Oyo, Kaduna, Enugu, and Anambra. Within these states, we support 60+ specific cities and areas. We're expanding nationwide!
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Do I need to sign up to try it?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        No! You can generate your first insight completely free without signing up. Try it, see the value, then decide if you want to save your business and get ongoing insights.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>What's the difference between Free and Pro?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Free: 1 insight per week, basic features. Pro: Unlimited insights, unlimited AI chat, competitor alerts, weekly reports, progress tracking, and priority support. Pro is for serious business owners who want continuous intelligence.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>How do I pay?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        We accept bank transfers, card payments via Paystack, and mobile money. All payments are secure and encrypted. Monthly billing, cancel anytime.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">
+                        <span>Can I cancel anytime?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Yes! Cancel anytime with one click. No questions asked, no hidden fees. If you cancel within 7 days, we'll refund you fully.
+                    </div>
+                </div>
+                <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Is my data safe?</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Absolutely. We use bank-level encryption for all data. Your business information is never shared with third parties. We're compliant with Nigerian data protection regulations.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Do you have an API?</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Yes! Our Enterprise plan includes API access for fintechs, POS providers, and business platforms. Contact partnerships@kiomate.ng for details.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How is this different from hiring a consultant?</span>
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Consultants cost ₦50k-200k+ and take weeks. KioMate gives you instant insights for ₦10k/month (or free to start), with 24/7 access and always up-to-date data. Plus, you can ask unlimited questions.
+                </div>
+            </div>
+
+            <h3 style="margin: 3rem 0 2rem; color: var(--teal);">Still have questions?</h3>
+            <div style="text-align: center; background: var(--bg-card); padding: 2rem; border-radius: 12px;">
+                <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                    Can't find what you're looking for? We're here to help!
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="mailto:ayineuna@gmail.com" class="btn btn-primary">Email Us</a>
+                    <a href="https://wa.me/2347042478201" class="btn btn-secondary" target="_blank">WhatsApp Support</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="logo" style="margin-bottom: 1rem;">
+            <span class="logo-kio">Kio</span><span class="logo-mate">Mate</span>
+        </div>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+            Business intelligence for Nigerian SMEs
+        </p>
+
+        <div class="footer-links">
+            <a href="#home" onclick="showPage('home')">Home</a>
+            <a href="#pricing" onclick="showPage('pricing')">Pricing</a>
+            <a href="#help" onclick="showPage('help')">Help</a>
+            <a href="mailto:ayineuna@gmail.com">Contact</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Made with ❤️ for Nigerian entrepreneurs
+        </p>
+        <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem;">
+            © 2026 KioMate. All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+    const API_URL = 'http://localhost:8000';
+
+    const LOCATIONS = {
+    "Abia": [
+        "Aba North",
+        "Aba South",
+        "Arochukwu",
+        "Bende",
+        "Ikwuano",
+        "Isiala-Ngwa North",
+        "Isiala-Ngwa South",
+        "Isuikwato",
+        "Obi Nwa",
+        "Ohafia",
+        "Osisioma",
+        "Ngwa",
+        "Ugwunagbo",
+        "Ukwa East",
+        "Ukwa West",
+        "Umuahia North",
+        "Umuahia South",
+        "Umu-Neochi"
+    ],
+    "Adamawa": [
+        "Demsa",
+        "Fufore",
+        "Ganaye",
+        "Gireri",
+        "Gombi",
+        "Guyuk",
+        "Hong",
+        "Jada",
+        "Lamurde",
+        "Madagali",
+        "Maiha",
+        "Mayo-Belwa",
+        "Michika",
+        "Mubi North",
+        "Mubi South",
+        "Numan",
+        "Shelleng",
+        "Song",
+        "Toungo",
+        "Yola North",
+        "Yola South"
+    ],
+    "Anambra": [
+        "Aguata",
+        "Anambra East",
+        "Anambra West",
+        "Anaocha",
+        "Awka North",
+        "Awka South",
+        "Ayamelum",
+        "Dunukofia",
+        "Ekwusigo",
+        "Idemili North",
+        "Idemili south",
+        "Ihiala",
+        "Njikoka",
+        "Nnewi North",
+        "Nnewi South",
+        "Ogbaru",
+        "Onitsha North",
+        "Onitsha South",
+        "Orumba North",
+        "Orumba South",
+        "Oyi"
+    ],
+    "Akwa Ibom": [
+        "Abak",
+        "Eastern Obolo",
+        "Eket",
+        "Esit Eket",
+        "Essien Udim",
+        "Etim Ekpo",
+        "Etinan",
+        "Ibeno",
+        "Ibesikpo Asutan",
+        "Ibiono Ibom",
+        "Ika",
+        "Ikono",
+        "Ikot Abasi",
+        "Ikot Ekpene",
+        "Ini",
+        "Itu",
+        "Mbo",
+        "Mkpat Enin",
+        "Nsit Atai",
+        "Nsit Ibom",
+        "Nsit Ubium",
+        "Obot Akara",
+        "Okobo",
+        "Onna",
+        "Oron",
+        "Oruk Anam",
+        "Udung Uko",
+        "Ukanafun",
+        "Uruan",
+        "Urue-Offong/Oruko ",
+        "Uyo"
+    ],
+    "Bauchi": [
+        "Alkaleri",
+        "Bauchi",
+        "Bogoro",
+        "Damban",
+        "Darazo",
+        "Dass",
+        "Ganjuwa",
+        "Giade",
+        "Itas/Gadau",
+        "Jama'are",
+        "Katagum",
+        "Kirfi",
+        "Misau",
+        "Ningi",
+        "Shira",
+        "Tafawa-Balewa",
+        "Toro",
+        "Warji",
+        "Zaki"
+    ],
+    "Bayelsa": [
+        "Brass",
+        "Ekeremor",
+        "Kolokuma/Opokuma",
+        "Nembe",
+        "Ogbia",
+        "Sagbama",
+        "Southern Jaw",
+        "Yenegoa"
+    ],
+    "Benue": [
+        "Ado",
+        "Agatu",
+        "Apa",
+        "Buruku",
+        "Gboko",
+        "Guma",
+        "Gwer East",
+        "Gwer West",
+        "Katsina-Ala",
+        "Konshisha",
+        "Kwande",
+        "Logo",
+        "Makurdi",
+        "Obi",
+        "Ogbadibo",
+        "Oju",
+        "Okpokwu",
+        "Ohimini",
+        "Oturkpo",
+        "Tarka",
+        "Ukum",
+        "Ushongo",
+        "Vandeikya"
+    ],
+    "Borno": [
+        "Abadam",
+        "Askira/Uba",
+        "Bama",
+        "Bayo",
+        "Biu",
+        "Chibok",
+        "Damboa",
+        "Dikwa",
+        "Gubio",
+        "Guzamala",
+        "Gwoza",
+        "Hawul",
+        "Jere",
+        "Kaga",
+        "Kala/Balge",
+        "Konduga",
+        "Kukawa",
+        "Kwaya Kusar",
+        "Mafa",
+        "Magumeri",
+        "Maiduguri",
+        "Marte",
+        "Mobbar",
+        "Monguno",
+        "Ngala",
+        "Nganzai",
+        "Shani"
+    ],
+    "Cross River": [
+        "Akpabuyo",
+        "Odukpani",
+        "Akamkpa",
+        "Biase",
+        "Abi",
+        "Ikom",
+        "Yarkur",
+        "Odubra",
+        "Boki",
+        "Ogoja",
+        "Yala",
+        "Obanliku",
+        "Obudu",
+        "Calabar South",
+        "Etung",
+        "Bekwara",
+        "Bakassi",
+        "Calabar Municipality"
+    ],
+    "Delta": [
+        "Oshimili",
+        "Aniocha",
+        "Aniocha South",
+        "Ika South",
+        "Ika North-East",
+        "Ndokwa West",
+        "Ndokwa East",
+        "Isoko south",
+        "Isoko North",
+        "Bomadi",
+        "Burutu",
+        "Ughelli South",
+        "Ughelli North",
+        "Ethiope West",
+        "Ethiope East",
+        "Sapele",
+        "Okpe",
+        "Warri North",
+        "Warri South",
+        "Uvwie",
+        "Udu",
+        "Warri Central",
+        "Ukwani",
+        "Oshimili North",
+        "Patani"
+    ],
+    "Ebonyi": [
+        "Edda",
+        "Afikpo",
+        "Onicha",
+        "Ohaozara",
+        "Abakaliki",
+        "Ishielu",
+        "lkwo",
+        "Ezza",
+        "Ezza South",
+        "Ohaukwu",
+        "Ebonyi",
+        "Ivo"
+    ],
+    "Enugu": [
+        "Enugu South,",
+        "Igbo-Eze South",
+        "Enugu North",
+        "Nkanu",
+        "Udi Agwu",
+        "Oji-River",
+        "Ezeagu",
+        "IgboEze North",
+        "Isi-Uzo",
+        "Nsukka",
+        "Igbo-Ekiti",
+        "Uzo-Uwani",
+        "Enugu Eas",
+        "Aninri",
+        "Nkanu East",
+        "Udenu."
+    ],
+    "Edo": [
+        "Esan North-East",
+        "Esan Central",
+        "Esan West",
+        "Egor",
+        "Ukpoba",
+        "Central",
+        "Etsako Central",
+        "Igueben",
+        "Oredo",
+        "Ovia SouthWest",
+        "Ovia South-East",
+        "Orhionwon",
+        "Uhunmwonde",
+        "Etsako East",
+        "Esan South-East"
+    ],
+    "Ekiti": [
+        "Ado",
+        "Ekiti-East",
+        "Ekiti-West",
+        "Emure/Ise/Orun",
+        "Ekiti South-West",
+        "Ikere",
+        "Irepodun",
+        "Ijero,",
+        "Ido/Osi",
+        "Oye",
+        "Ikole",
+        "Moba",
+        "Gbonyin",
+        "Efon",
+        "Ise/Orun",
+        "Ilejemeje."
+    ],
+    "FCT": [
+        "Abaji",
+        "Abuja Municipal",
+        "Bwari",
+        "Gwagwalada",
+        "Kuje",
+        "Kwali"
+    ],
+    "Gombe": [
+        "Akko",
+        "Balanga",
+        "Billiri",
+        "Dukku",
+        "Kaltungo",
+        "Kwami",
+        "Shomgom",
+        "Funakaye",
+        "Gombe",
+        "Nafada/Bajoga",
+        "Yamaltu/Delta."
+    ],
+    "Imo": [
+        "Aboh-Mbaise",
+        "Ahiazu-Mbaise",
+        "Ehime-Mbano",
+        "Ezinihitte",
+        "Ideato North",
+        "Ideato South",
+        "Ihitte/Uboma",
+        "Ikeduru",
+        "Isiala Mbano",
+        "Isu",
+        "Mbaitoli",
+        "Mbaitoli",
+        "Ngor-Okpala",
+        "Njaba",
+        "Nwangele",
+        "Nkwerre",
+        "Obowo",
+        "Oguta",
+        "Ohaji/Egbema",
+        "Okigwe",
+        "Orlu",
+        "Orsu",
+        "Oru East",
+        "Oru West",
+        "Owerri-Municipal",
+        "Owerri North",
+        "Owerri West"
+    ],
+    "Jigawa": [
+        "Auyo",
+        "Babura",
+        "Birni Kudu",
+        "Biriniwa",
+        "Buji",
+        "Dutse",
+        "Gagarawa",
+        "Garki",
+        "Gumel",
+        "Guri",
+        "Gwaram",
+        "Gwiwa",
+        "Hadejia",
+        "Jahun",
+        "Kafin Hausa",
+        "Kaugama Kazaure",
+        "Kiri Kasamma",
+        "Kiyawa",
+        "Maigatari",
+        "Malam Madori",
+        "Miga",
+        "Ringim",
+        "Roni",
+        "Sule-Tankarkar",
+        "Taura",
+        "Yankwashi"
+    ],
+    "Kaduna": [
+        "Birni-Gwari",
+        "Chikun",
+        "Giwa",
+        "Igabi",
+        "Ikara",
+        "jaba",
+        "Jema'a",
+        "Kachia",
+        "Kaduna North",
+        "Kaduna South",
+        "Kagarko",
+        "Kajuru",
+        "Kaura",
+        "Kauru",
+        "Kubau",
+        "Kudan",
+        "Lere",
+        "Makarfi",
+        "Sabon-Gari",
+        "Sanga",
+        "Soba",
+        "Zango-Kataf",
+        "Zaria"
+    ],
+    "Kano": [
+        "Ajingi",
+        "Albasu",
+        "Bagwai",
+        "Bebeji",
+        "Bichi",
+        "Bunkure",
+        "Dala",
+        "Dambatta",
+        "Dawakin Kudu",
+        "Dawakin Tofa",
+        "Doguwa",
+        "Fagge",
+        "Gabasawa",
+        "Garko",
+        "Garum",
+        "Mallam",
+        "Gaya",
+        "Gezawa",
+        "Gwale",
+        "Gwarzo",
+        "Kabo",
+        "Kano Municipal",
+        "Karaye",
+        "Kibiya",
+        "Kiru",
+        "kumbotso",
+        "Ghari",
+        "Kura",
+        "Madobi",
+        "Makoda",
+        "Minjibir",
+        "Nasarawa",
+        "Rano",
+        "Rimin Gado",
+        "Rogo",
+        "Shanono",
+        "Sumaila",
+        "Takali",
+        "Tarauni",
+        "Tofa",
+        "Tsanyawa",
+        "Tudun Wada",
+        "Ungogo",
+        "Warawa",
+        "Wudil"
+    ],
+    "Katsina": [
+        "Bakori",
+        "Batagarawa",
+        "Batsari",
+        "Baure",
+        "Bindawa",
+        "Charanchi",
+        "Dandume",
+        "Danja",
+        "Dan Musa",
+        "Daura",
+        "Dutsi",
+        "Dutsin-Ma",
+        "Faskari",
+        "Funtua",
+        "Ingawa",
+        "Jibia",
+        "Kafur",
+        "Kaita",
+        "Kankara",
+        "Kankia",
+        "Katsina",
+        "Kurfi",
+        "Kusada",
+        "Mai'Adua",
+        "Malumfashi",
+        "Mani",
+        "Mashi",
+        "Matazuu",
+        "Musawa",
+        "Rimi",
+        "Sabuwa",
+        "Safana",
+        "Sandamu",
+        "Zango"
+    ],
+    "Kebbi": [
+        "Aleiro",
+        "Arewa-Dandi",
+        "Argungu",
+        "Augie",
+        "Bagudo",
+        "Birnin Kebbi",
+        "Bunza",
+        "Dandi",
+        "Fakai",
+        "Gwandu",
+        "Jega",
+        "Kalgo",
+        "Koko/Besse",
+        "Maiyama",
+        "Ngaski",
+        "Sakaba",
+        "Shanga",
+        "Suru",
+        "Wasagu/Danko",
+        "Yauri",
+        "Zuru"
+    ],
+    "Kogi": [
+        "Adavi",
+        "Ajaokuta",
+        "Ankpa",
+        "Bassa",
+        "Dekina",
+        "Ibaji",
+        "Idah",
+        "Igalamela-Odolu",
+        "Ijumu",
+        "Kabba/Bunu",
+        "Kogi",
+        "Lokoja",
+        "Mopa-Muro",
+        "Ofu",
+        "Ogori/Mangongo",
+        "Okehi",
+        "Okene",
+        "Olamabolo",
+        "Omala",
+        "Yagba East",
+        "Yagba West"
+    ],
+    "Kwara": [
+        "Asa",
+        "Baruten",
+        "Edu",
+        "Ekiti",
+        "Ifelodun",
+        "Ilorin East",
+        "Ilorin West",
+        "Irepodun",
+        "Isin",
+        "Kaiama",
+        "Moro",
+        "Offa",
+        "Oke-Ero",
+        "Oyun",
+        "Pategi"
+    ],
+    "Lagos": [
+        "Agege",
+        "Ajeromi-Ifelodun",
+        "Alimosho",
+        "Amuwo-Odofin",
+        "Apapa",
+        "Badagry",
+        "Epe",
+        "Eti-Osa",
+        "Ibeju/Lekki",
+        "Ifako-Ijaye",
+        "Ikeja",
+        "Ikorodu",
+        "Kosofe",
+        "Lagos Island",
+        "Lagos Mainland",
+        "Mushin",
+        "Ojo",
+        "Oshodi-Isolo",
+        "Shomolu",
+        "Surulere"
+    ],
+    "Nasarawa": [
+        "Akwanga",
+        "Awe",
+        "Doma",
+        "Karu",
+        "Keana",
+        "Keffi",
+        "Kokona",
+        "Lafia",
+        "Nasarawa",
+        "Nasarawa-Eggon",
+        "Obi",
+        "Toto",
+        "Wamba"
+    ],
+    "Niger": [
+        "Agaie",
+        "Agwara",
+        "Bida",
+        "Borgu",
+        "Bosso",
+        "Chanchaga",
+        "Edati",
+        "Gbako",
+        "Gurara",
+        "Katcha",
+        "Kontagora",
+        "Lapai",
+        "Lavun",
+        "Magama",
+        "Mariga",
+        "Mashegu",
+        "Mokwa",
+        "Muya",
+        "Pailoro",
+        "Rafi",
+        "Rijau",
+        "Shiroro",
+        "Suleja",
+        "Tafa",
+        "Wushishi"
+    ],
+    "Ogun": [
+        "Abeokuta North",
+        "Abeokuta South",
+        "Ado-Odo/Ota",
+        "Yewa North",
+        "Yewa South",
+        "Ewekoro",
+        "Ifo",
+        "Ijebu East",
+        "Ijebu North",
+        "Ijebu North East",
+        "Ijebu Ode",
+        "Ikenne",
+        "Imeko-Afon",
+        "Ipokia",
+        "Obafemi-Owode",
+        "Ogun Waterside",
+        "Odeda",
+        "Odogbolu",
+        "Remo North",
+        "Shagamu"
+    ],
+    "Ondo": [
+        "Akoko North East",
+        "Akoko North West",
+        "Akoko South Akure East",
+        "Akoko South West",
+        "Akure North",
+        "Akure South",
+        "Ese-Odo",
+        "Idanre",
+        "Ifedore",
+        "Ilaje",
+        "Ile-Oluji",
+        "Okeigbo",
+        "Irele",
+        "Odigbo",
+        "Okitipupa",
+        "Ondo East",
+        "Ondo West",
+        "Ose",
+        "Owo"
+    ],
+    "Osun": [
+        "Aiyedade",
+        "Aiyedire",
+        "Atakumosa East",
+        "Atakumosa West",
+        "Boluwaduro",
+        "Boripe",
+        "Ede North",
+        "Ede South",
+        "Egbedore",
+        "Ejigbo",
+        "Ife Central",
+        "Ife East",
+        "Ife North",
+        "Ife South",
+        "Ifedayo",
+        "Ifelodun",
+        "Ila",
+        "Ilesha East",
+        "Ilesha West",
+        "Irepodun",
+        "Irewole",
+        "Isokan",
+        "Iwo",
+        "Obokun",
+        "Odo-Otin",
+        "Ola-Oluwa",
+        "Olorunda",
+        "Oriade",
+        "Orolu",
+        "Osogbo"
+    ],
+    "Oyo": [
+        "Afijio",
+        "Akinyele",
+        "Atiba",
+        "Atisbo",
+        "Egbeda",
+        "Ibadan Central",
+        "Ibadan North",
+        "Ibadan North West",
+        "Ibadan South East",
+        "Ibadan South West",
+        "Ibarapa Central",
+        "Ibarapa East",
+        "Ibarapa North",
+        "Ido",
+        "Irepo",
+        "Iseyin",
+        "Itesiwaju",
+        "Iwajowa",
+        "Kajola",
+        "Lagelu Ogbomosho North",
+        "Ogbomosho South",
+        "Ogo Oluwa",
+        "Olorunsogo",
+        "Oluyole",
+        "Ona-Ara",
+        "Orelope",
+        "Ori Ire",
+        "Oyo East",
+        "Oyo West",
+        "Saki East",
+        "Saki West",
+        "Surulere"
+    ],
+    "Plateau": [
+        "Barikin Ladi",
+        "Bassa",
+        "Bokkos",
+        "Jos East",
+        "Jos North",
+        "Jos South",
+        "Kanam",
+        "Kanke",
+        "Langtang North",
+        "Langtang South",
+        "Mangu",
+        "Mikang",
+        "Pankshin",
+        "Qua'an Pan",
+        "Riyom",
+        "Shendam",
+        "Wase"
+    ],
+    "Rivers": [
+        "Abua/Odual",
+        "Ahoada East",
+        "Ahoada West",
+        "Akuku Toru",
+        "Andoni",
+        "Asari-Toru",
+        "Bonny",
+        "Degema",
+        "Emohua",
+        "Eleme",
+        "Etche",
+        "Gokana",
+        "Ikwerre",
+        "Khana",
+        "Obio/Akpor",
+        "Ogba/Egbema/Ndoni",
+        "Ogu/Bolo",
+        "Okrika",
+        "Omumma",
+        "Opobo/Nkoro",
+        "Oyigbo",
+        "Port-Harcourt",
+        "Tai"
+    ],
+    "Sokoto": [
+        "Binji",
+        "Bodinga",
+        "Dange-shnsi",
+        "Gada",
+        "Goronyo",
+        "Gudu",
+        "Gawabawa",
+        "Illela",
+        "Isa",
+        "Kware",
+        "kebbe",
+        "Rabah",
+        "Sabon birni",
+        "Shagari",
+        "Silame",
+        "Sokoto North",
+        "Sokoto South",
+        "Tambuwal",
+        "Tqngaza",
+        "Tureta",
+        "Wamako",
+        "Wurno",
+        "Yabo"
+    ],
+    "Taraba": [
+        "Ardo-kola",
+        "Bali",
+        "Donga",
+        "Gashaka",
+        "Cassol",
+        "Ibi",
+        "Jalingo",
+        "Karin-Lamido",
+        "Kurmi",
+        "Lau",
+        "Sardauna",
+        "Takum",
+        "Ussa",
+        "Wukari",
+        "Yorro",
+        "Zing"
+    ],
+    "Yobe": [
+        "Bade",
+        "Bursari",
+        "Damaturu",
+        "Fika",
+        "Fune",
+        "Geidam",
+        "Gujba",
+        "Gulani",
+        "Jakusko",
+        "Karasuwa",
+        "Karawa",
+        "Machina",
+        "Nangere",
+        "Nguru Potiskum",
+        "Tarmua",
+        "Yunusari",
+        "Yusufari"
+    ],
+    "Zamfara": [
+        "Anka",
+        "Bakura",
+        "Birnin Magaji",
+        "Bukkuyum",
+        "Bungudu",
+        "Gummi",
+        "Gusau",
+        "Kaura",
+        "Namoda",
+        "Maradun",
+        "Maru",
+        "Shinkafi",
+        "Talata Mafara",
+        "Tsafe",
+        "Zurmi"
+    ]
+};
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        populateStates();
+        loadTheme();
+    });
+
+    // Theme Management
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    }
+
+    function loadTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+    }
+
+    // Page Navigation
+    function showPage(page) {
+        const pages = ['home-page', 'pricing-page', 'help-page'];
+        pages.forEach(p => {
+            document.getElementById(p).classList.add('hidden');
+        });
+        document.getElementById(page + '-page').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    function scrollToTry() {
+        showPage('home');
+        setTimeout(() => {
+            document.getElementById('try').scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
+
+    // Form Setup
+    function populateStates() {
+        const stateSelect = document.getElementById('state');
+        Object.keys(LOCATIONS).forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+
+        stateSelect.addEventListener('change', () => {
+            const state = stateSelect.value;
+            const areaGroup = document.getElementById('area-group');
+            const areaSelect = document.getElementById('area');
+
+            if (state && LOCATIONS[state]) {
+                areaGroup.classList.remove('hidden');
+                areaSelect.innerHTML = '<option value="">Entire state</option>';
+                LOCATIONS[state].forEach(area => {
+                    const option = document.createElement('option');
+                    option.value = area;
+                    option.textContent = area;
+                    areaSelect.appendChild(option);
+                });
+            } else {
+                areaGroup.classList.add('hidden');
+            }
+        });
+    }
+
+    // Insights Generation
+    async function generateInsights() {
+        const businessType = document.getElementById('business-type').value;
+        const state = document.getElementById('state').value;
+        const area = document.getElementById('area').value;
+
+        if (!businessType || !state) {
+            alert('Please select both business type and state');
+            return;
+        }
+
+        // Show loading
+        document.getElementById('try-form').classList.add('hidden');
+        document.getElementById('loading-state').classList.remove('hidden');
+
+        const messages = [
+            'Analyzing customer behavior...',
+            'Reviewing local competition...',
+            'Checking pricing trends...',
+            'Finding growth opportunities...',
+        ];
+
+        let msgIndex = 0;
+        const loadingText = document.getElementById('loading-text');
+        const interval = setInterval(() => {
+            loadingText.textContent = messages[msgIndex];
+            msgIndex = (msgIndex + 1) % messages.length;
+        }, 1500);
+
+        try {
+            const response = await fetch(`${API_URL}/insights/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    business_type: businessType,
+                    state: state,
+                    area: area || null
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed');
+
+            const data = await response.json();
+            clearInterval(interval);
+            displayInsights(data, businessType, area || state);
+        } catch (error) {
+            clearInterval(interval);
+            alert('Error generating insights. Please try again.');
+            document.getElementById('try-form').classList.remove('hidden');
+            document.getElementById('loading-state').classList.add('hidden');
+        }
+    }
+
+    function displayInsights(insights, businessType, location) {
+        const content = document.getElementById('insights-content');
+
+        content.innerHTML = `
+            <div style="background: var(--bg-secondary); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <h4 style="color: var(--teal); margin-bottom: 1rem;">💡 Key Insights for ${businessType} in ${location}</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <strong style="color: var(--orange);">⏰ Peak Hours</strong>
+                        <p style="margin-top: 0.5rem; color: var(--text-secondary);">${insights.peak_hours}</p>
+                    </div>
+                    <div>
+                        <strong style="color: var(--orange);">🏪 Competition</strong>
+                        <p style="margin-top: 0.5rem; color: var(--text-secondary);">${insights.competition}</p>
+                    </div>
+                    <div>
+                        <strong style="color: var(--orange);">💰 Pricing</strong>
+                        <p style="margin-top: 0.5rem; color: var(--text-secondary);">${insights.price_sensitivity}</p>
+                    </div>
+                </div>
+            </div>
+
+            <h4 style="color: var(--teal); margin: 1.5rem 0 1rem;">🎯 Quick Wins - Do These This Week</h4>
+            ${insights.quick_wins.map((win, i) => `
+                <div style="background: var(--bg-card); padding: 1rem; border-left: 4px solid var(--orange); margin-bottom: 0.8rem; border-radius: 4px;">
+                    <strong style="color: var(--orange);">${i + 1}.</strong> ${win}
+                </div>
+            `).join('')}
+
+            <p style="margin-top: 1.5rem; color: var(--text-secondary); font-size: 0.9rem;">
+                📊 ${insights.data_note}
+            </p>
+        `;
+
+        document.getElementById('loading-state').classList.add('hidden');
+        document.getElementById('results-state').classList.remove('hidden');
+    }
+
+    // FAQ Toggle
+    function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('span:last-child');
+
+        answer.classList.toggle('show');
+        icon.textContent = answer.classList.contains('show') ? '-' : '+';
+    }
+</script>
